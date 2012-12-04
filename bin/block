@@ -34,11 +34,7 @@ replace_block () {
     fi
   done < $src
 
-  if [[ -n $output ]]; then
-    echo $out > $output
-  else
-    echo $out
-  fi
+  echo $out
 }
 
 
@@ -60,7 +56,11 @@ while test $# -ne 0; do
       exit
       ;;
     *)
-      replace_block "$(pwd)/$arg"
+      if [[ -n $output ]]; then
+        replace_block "$(pwd)/$arg" > $output
+      else
+        replace_block "$(pwd)/$arg"
+      fi
       exit
       ;;
   esac
