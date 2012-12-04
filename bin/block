@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+
+version="0.0.1"
+
+
+usage () {
+  cat <<EOF
+
+  Usage: block [options] <file>
+
+  Options:
+    -o, --output      output to file instead of stdout
+    -v, --version     ouput version information
+    -h, --help        output this usage information
+
+EOF
+}
+
+
+
+# Replace block with the corresponding file
+
+replace_block () {
+  src=$1
+  out=""
+
+  while read line
+  do
+    if [[ $line == *block* ]]; then
+      out+=$(replace_block $(echo "$(dirname $src)/${line/block/}" | tr -d ' '))
+    else
+      out+=$line
+    fi
+  done < $src
+
+  if [[ -n $output ]]; then
+    echo $out > $output
+  else
+    echo $out
+  fi
+}
+
+
+# parse args
+
+while test $# -ne 0; do
+  arg=$1; shift
+  case $arg in
+    -o|--output)
+      output=$1
+      shift
+      ;;
+    -v|--version)
+      echo $version
+      exit
+      ;;
+    -h|--help)
+      usage
+      exit
+      ;;
+    *)
+      replace_block "$(pwd)/$arg"
+      exit
+      ;;
+  esac
+done
+
+usage
+
