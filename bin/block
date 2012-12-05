@@ -28,7 +28,7 @@ replace_block () {
 
   while read -r line
   do
-    if [[ $line == *block* ]]; then
+    if [[ $line == block* ]]; then
       out+="$(replace_block $(echo "$(dirname $src)/${line/block/}" | tr -d ' '))\n"
     else
       out+="$line\n"
@@ -40,7 +40,7 @@ replace_block () {
 }
 
 
-# parse args
+# Parse arguments
 
 while test $# -ne 0; do
   arg=$1; shift
