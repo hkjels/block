@@ -18,6 +18,20 @@ EOF
 }
 
 
+# Remove quotes from argument
+
+unquote () {
+  echo $1 | tr -d '"' | tr -d "'"
+}
+
+
+# Remove whitespace from argument
+
+trim () {
+  echo $1 | tr -d ' '
+}
+
+
 # Replace block with the corresponding file
 
 replace_block () {
@@ -28,8 +42,10 @@ replace_block () {
 
   while read -r line
   do
-    if [[ $line == block* ]]; then
-      out+="$(replace_block $(echo "$(dirname $src)/${line/block/}" | tr -d ' '))\n"
+    if [[ $line =~ ^[[:space:]]*block ]]; then
+      file="$(dirname $src)/${line/block/}"
+      file=$(unquote $(trim $file))
+      out+="$(replace_block $file)"
     else
       out+="$line\n"
     fi

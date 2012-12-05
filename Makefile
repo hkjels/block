@@ -9,5 +9,5 @@ uninstall:
 	rm -f "$(DST)/block"
 
 
-.PHONY: install uninstall
+.PHONY: install uninstall test
 
