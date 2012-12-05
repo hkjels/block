@@ -18,23 +18,25 @@ EOF
 }
 
 
-
 # Replace block with the corresponding file
 
 replace_block () {
   src=$1
   out=""
+  OIFS=$IFS
+  IFS=
 
-  while read line
+  while read -r line
   do
     if [[ $line == *block* ]]; then
-      out+=$(replace_block $(echo "$(dirname $src)/${line/block/}" | tr -d ' '))
+      out+="$(replace_block $(echo "$(dirname $src)/${line/block/}" | tr -d ' '))\n"
     else
-      out+=$line
+      out+="$line\n"
     fi
   done < $src
 
-  echo $out
+  echo -e $out
+  IFS=$OIFS
 }
 
 
@@ -56,15 +58,22 @@ while test $# -ne 0; do
       exit
       ;;
     *)
-      if [[ -n $output ]]; then
-        replace_block "$(pwd)/$arg" > $output
-      else
-        replace_block "$(pwd)/$arg"
-      fi
-      exit
+      input="$(pwd)/$arg"
       ;;
   esac
 done
 
-usage
+
+if [[ -n $input ]]; then
+  if [[ -n $output ]]; then
+    # Output block to file
+    replace_block $input > $output
+  else
+    # Output block to stdout
+    replace_block $input
+  fi
+else
+  # Display usage if no parameters have been set
+  usage
+fi
 
