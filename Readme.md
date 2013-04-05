@@ -1,6 +1,6 @@
-
 Block
 =====
+[![Project Status](http://stillmaintained.com/hkjels/block.png)](http://stillmaintained.com/hkjels/block)
 
 Include a file from within another using a block-statement.
 
