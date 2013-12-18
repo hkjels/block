@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+version="0.1.0"
 
-version="0.0.1"
-
+# Outputs usage information
 
 usage () {
-  cat <<EOF
+  [ "$1" = "1" ] && echo ""
+  echo "  Usage: block [-o <file>] <file>"
 
-  Usage: block [options] <file>
+  if [ "$1" = "1" ]; then
+  cat <<EOF
 
   Options:
     -o, --output      output to file instead of stdout
@@ -15,8 +17,8 @@ usage () {
     -h, --help        output this usage information
 
 EOF
+  fi
 }
-
 
 # Remove quotes from argument
 
@@ -24,13 +26,21 @@ unquote () {
   echo $1 | tr -d '"' | tr -d "'"
 }
 
-
 # Remove whitespace from argument
 
 trim () {
   echo $1 | tr -d ' '
 }
 
+# Get absolute path to file
+
+absolute_path() {
+  local parent=$(dirname "$1")
+  cd "$parent"
+  local abs="$(pwd)/$(basename $1)"
+  cd - >/dev/null
+  echo "$abs"
+}
 
 # Replace block with the corresponding file
 
@@ -55,7 +65,6 @@ replace_block () {
   IFS=$OIFS
 }
 
-
 # Parse arguments
 
 while test $# -ne 0; do
@@ -70,15 +79,16 @@ while test $# -ne 0; do
       exit
       ;;
     -h|--help)
-      usage
+      usage 1
       exit
       ;;
     *)
-      input="$(pwd)/$arg"
+      input=$(absolute_path "$(pwd)/$arg")
       ;;
   esac
 done
 
+# Output
 
 if [[ -n $input ]]; then
   if [[ -n $output ]]; then
@@ -89,7 +99,7 @@ if [[ -n $input ]]; then
     replace_block $input
   fi
 else
-  # Display usage if no parameters have been set
+  # Display short-usage if no paramters have been passed
   usage
 fi
 

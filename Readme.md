@@ -4,25 +4,24 @@ Block
 
 Include a file from within another using a block-statement.
 
+```sh
+Usage: block [-o <file>] <file>
 
-    Usage: block [options] <file>
+Options:
+  -o, --output      output the result to a file
+  -v, --version     ouput version information
+  -h, --help        output this usage information
+```
 
-    Options:
-      -o, --output      output the result to a file
-      -v, --version     ouput version information
-
-
-### Install
+## Install
 
     ± make install
 
-
-### Uninstall
+## Uninstall
 
     ± make uninstall
 
-
-### License
+## License
 
 > (The MIT License)
 >

@@ -1,13 +1,22 @@
 
-DST=/usr/local/bin
+PREFIX?=/usr/local/bin
+BIN=block
 
 
-install:
-	cp -f bin/block "$(DST)/block"
+install: $(BIN)
+	mkdir -p $(PREFIX)
+	cp -f $^ $(PREFIX)/
 
 uninstall:
-	rm -f "$(DST)/block"
+	rm -f $(PREFIX)/$(BIN)
+
+test: $(BIN)
+	./$^ test/test.md
+	./$^ test/test.md -o out.md
+
+clean:
+	rm out.md
 
 
-.PHONY: install uninstall test
+.PHONY: install uninstall test clean
 
